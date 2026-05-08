@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio - Alief Developer | Cyberpunk Glossy Design</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-gradient: linear-gradient(135deg, #00f5ff 0%, #ff00ff 50%, #00ff88 100%);
+            --secondary-gradient: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 100%);
+            --cyber-gradient: linear-gradient(45deg, #ff006e 0%, #8338ec 25%, #3a86ff 50%, #06ffa5 75%, #ffbe0b 100%);
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --shadow-neon: 0 0 30px rgba(0, 255, 255, 0.3);
+            --shadow-glow: 0 0 20px rgba(255, 0, 255, 0.2);
+            --text-primary: #fff;
+            --text-secondary: #ccc;
+            --bg-dark: #0a0a0a;
+            --bg-matrix: #000;
+        }
+
+        [data-theme="light"] {
+            --text-primary: #1a1a1a;
+            --text-secondary: #666;
+            --bg-dark: #f8f9fa;
+            --glass-bg: rgba(255, 255, 255, 0.9);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            overflow-x: hidden;
+            background: var(--bg-dark);
+            position: relative;
+            cursor: none;
+        }
+
+        /* Custom Cursor */
+        .cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background: var(--primary-gradient);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            mix-blend-mode: difference;
+            transition: transform 0.1s ease;
+        }
+
+        .cursor-follower {
+            position: fixed;
+            width: 40px;
+            height: 40px;
+            border: 2px solid rgba(0, 255, 255, 0.5);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9998;
+            transition: all 0.3s ease;
+        }
+
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-matrix);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            transition: opacity 1s ease;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(0, 255, 255, 0.1);
+            border-top: 4px solid #00f5ff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Matrix Rain Background */
+        .matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            opacity: 0.1;
+        }
+
+        /* Particle Network */
+        #particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: var(--glass-bg);
+            backdrop-filter: blur(30px);
+            border-bottom: 1px solid var(--glass-border);
+            z-index: 1000;
+            padding: 1rem 0;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.8rem;
+            font-weight: 800;
+            font-family: 'Orbitron', monospace;
+            background: var(--cyber-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+        }
+
+        .nav-link {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 600;
+            position: relative;
+            padding: 0.5rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-gradient);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::before {
+            width: 100%;
+        }
+
+        .nav-link:hover {
+            text-shadow: var(--shadow-neon);
+        }
+
+        .theme-toggle {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-primary);
+            padding: 0.8rem;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            box-shadow: var(--shadow-glow);
+            transform: rotate(180deg);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 140px 2rem 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(0, 255, 255, 0.4) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 0, 255, 0.4) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(0, 255, 136, 0.3) 0%, transparent 50%);
+            z-index: -1;
+            animation: aurora 20s ease-in-out infinite;
+        }
+
+        @keyframes aurora {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .hero-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5rem;
+            align-items: center;
+        }
+
+        .hero-title {
+            font-size: clamp(3rem, 6vw, 5rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 2rem;
+            font-family: 'Orbitron', monospace;
+        }
+
+        .gradient-text {
+            background: var(--cyber-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: textGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes textGlow {
+            from { filter: drop-shadow(0 0 20px #00f5ff); }
+            to { filter: drop-shadow(0 0 30px #ff00ff); }
+        }
+
+        .typing-text {
+            border-right: 3px solid #00f5ff;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { border-color: transparent; }
+            51%, 100% { border-color: #00f5ff; }
+        }
+
+        .hero-subtitle {
+            font-size: 1.4rem;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+            max-width: 600px;
+        }
+
+        /* Glassmorphism Cards */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(30px);
+            border: 1px solid var(--glass-border);
+            border-radius: 25px;
+            padding: 2.5rem;
+            box-shadow: var(--shadow-neon);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.6s;
+        }
+
+        .glass-card:hover::before {
+            left: 100%;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 30px 60px rgba(0, 255, 255, 0.3);
+        }
+
+        /* Floating Elements */
+        .floating-elements {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .floating-item {
+            position: absolute;
+            background: var(--glass-bg);
+            border-radius: 50%;
+            border: 1px solid var(--glass-border);
+            animation: float 20s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+
+        /* Continue with all other sections... */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .section-title {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            text-align: center;
+            margin-bottom: 5rem;
+            position: relative;
+            font-family: 'Orbitron', monospace;
+            background: var(--cyber-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: pulseGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes pulseGlow {
+            from { filter: drop-shadow(0 0 10px #00f5ff); }
+            to { filter: drop-shadow(0 0 20px #ff00ff); }
+        }
+
+        /* Portfolio Items with 3D Tilt */
+        .portfolio-item {
+            perspective: 1000px;
+            height: 400px;
+        }
+
+        .portfolio-card {
+            height: 100%;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.2);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-gradient);
+            border-radius: 6px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-container {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 3rem;
+            }
+        }
+
+        /* Skeleton Loading */
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+    </style>
+</head>
+<body data-theme="dark">
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-spinner"></div>
+        <p style="margin-top: 2rem; font-family: 'Orbitron', monospace; color: #00f5ff;">Initializing Portfolio...</p>
+    </div>
+
+    <!-- Matrix Background Canvas -->
+    <canvas class="matrix-bg" id="matrixCanvas"></canvas>
+    
+    <!-- Particles Canvas -->
+    <canvas id="particles"></canvas>
+
+    <!-- Custom Cursor -->
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-follower" id="cursorFollower"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-microchip"></i>
+                <span>AliefDev</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#home" class="nav-link">Home</a></li>
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#skills" class="nav-link">Skills</a></li>
+                <li><a href="#portfolio" class="nav-link">Portfolio</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+            </ul>
+            <button class="theme-toggle" id="themeToggle">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="floating-elements" id="floatingElements"></div>
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    <span class="gradient-text">Hi, I'm</span><br>
+                    <span class="hero-name typing-text" id="heroName">Alief Developer</span>
+                </h1>
+                <p class="hero-subtitle">
+                    Full Stack Developer | Cyberpunk UI/UX Designer | Aceh-based Tech Innovator
+                </p>
+                <div class="hero-buttons">
+                    <a href="#portfolio" class="btn btn-primary glass-card">
+                        <i class="fas fa-eye"></i> Explore Projects
+                    </a>
+                    <a href="#contact" class="btn btn-secondary glass-card">
+                        <i class="fas fa-rocket"></i> Start Project
+                    </a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="glass-card floating-card" style="width: 350px; height: 350px;">
+                    <i class="fas fa-laptop-code" style="font-size: 6rem;"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about" style="padding: 120px 0;">
+        <div class="container">
+            <h2 class="section-title">About Alief</h2>
+            <div class="about-content" style="display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center;">
+                <div class="glass-card">
+                    <h3 style="font-size: 2rem; margin-bottom: 1.5rem; color: #fff;">Full Stack Developer from Aceh</h3>
+                    <p style="font-size: 1.2rem; line-height: 1.8; color: var(--text-secondary);">
+                        Saya Alief, Full Stack Developer berbasis di <strong>Banda Aceh, Aceh</strong> dengan pengalaman 
+                        5+ tahun membangun aplikasi web modern yang responsif, performa tinggi, dan user-centric. 
+                        Passionate dalam menciptakan solusi digital inovatif yang scalable dan future-proof.
+                    </p>
+                    <div style="display: flex; gap: 2rem; margin-top: 2rem;">
+                        <div>
+                            <h4 style="color: #00f5ff; margin-bottom: 0.5rem;">60+</h4>
+                            <p>Projects Completed</p>
+                        </div>
+                        <div>
+                            <h4 style="color: #ff00ff; margin-bottom: 0.5rem;">5+</h4>
+                            <p>Years Experience</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="glass-card" style="height: 400px; display: flex; align-items: center; justify-content: center;">
+                    <i class="fas fa-user-astronaut" style="font-size: 8rem; color: #00f5ff;"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfolio Section with Detailed Descriptions -->
+    <section id="portfolio" class="portfolio" style="padding: 120px 0; background: rgba(255,255,255,0.02);">
+        <div class="container">
+            <h2 class="section-title">Featured Projects</h2>
+            <div class="portfolio-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 2.5rem;">
+                
+                <!-- E-Commerce Platform -->
+                <div class="portfolio-item">
+                    <div class="portfolio-card">
+                        <div class="portfolio-image" style="height: 220px; background: var(--primary-gradient); display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-shopping-cart" style="font-size: 4rem; color: white;"></i>
+                        </div>
+                        <div style="padding: 2rem;">
+                            <h3 style="margin-bottom: 1rem; color: #fff; font-size: 1.5rem;">E-Commerce Platform</h3>
+                            <p style="color: var(--text-secondary); margin-bottom: 1.5rem; line-height: 1.7;">
+                                Platform e-commerce lengkap dengan sistem payment gateway (Midtrans, Xendit), 
+                                inventory management real-time, admin dashboard dengan analytics, dan mobile app 
+                                menggunakan React Native. Features: multi-vendor, promo system, live chat, dan 
+                                delivery tracking integration.
+                            </p>
+                            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                                <span style="background: rgba(255,255,255,0.1); padding: 0.4rem 1rem; border-radius: 20px; font-size: 0.85rem;">React</span>
+                                <span style="background: rgba(255,255,255,0.1); padding: 0.4rem 1rem; border-radius: 20px; font-size: 0.85rem;">Node.js</span>
+                                <span style="background: rgba(255,255,255,0.1); padding: 0.4rem 1rem; border-radius: 20px; font-size: 0.85rem;">MongoDB</span>
+                                <span style="background: rgba(255,255,255,0.1); padding: 0.4rem 1rem; border-radius: 20px; font-size: 0.85rem;">Midtrans</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Task Management -->
+                <div class="portfolio-item">
+                    <div class="portfolio-card">
+                        <div class="portfolio-image" style="height: 220px; background: var(--secondary-gradient); display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-tasks" style="font-size: 4rem; color: white;"></i>
+                        </div>
+                        <div style="padding: 2rem;">
+                            <h3 style="margin-bottom: 1rem; color: #fff; font-size: 1.5rem;">Task Management System</h3>
+                            <p style="color: var(--text-secondary); margin-bottom: 1.5rem; line-height: 1.7;">
+                                Aplikasi manajemen task kolaboratif dengan real-time updates menggunakan WebSocket, 
+                                drag & drop interface, AI-powered task prioritization, team collaboration features, 
+                                dan reporting system. Terintegrasi dengan Google Calendar dan Slack notifications.
+                            </p>
+                            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                                <span style="background: rgba(255,255,255,0.1); padding: 0.4rem 1rem; border-radius: 20px; font-size: 0.85rem;">Vue 3</span>
+                                <span style="background: rgba(255,255,255,0.1); padding: 0.4rem 1rem; border-radius: 20px; font-size: 0.85rem;">Socket.io</span>
+                                <span style="background: rgba(255,255,255,0.1); padding: 0.4rem 1rem; border-radius: 20px; font-size: 0.85rem;">Firebase</span>
+                                <span style="background: rgba(255,255,255,0.1); padding: 0.4rem 1rem; border-radius: 20px; font-size: 0.85rem;">AI/ML</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Analytics Dashboard -->
+                <div class="portfolio-item">
+                    <div class="portfolio-card">
+                        <div class="portfolio-image" style="height: 220px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-chart-line" style="font-size: 4rem; color: white;"></i>
+                        </div>
+                        <div style="padding: 2rem;">
+                            <h3 style="margin-bottom: 1rem; color: #fff; font-size: 1.5rem;">Analytics Dashboard</h3>
+                            <p style="color: var(--text-secondary); margin-bottom: 1.5rem; line-height: 1.7;">
+                                Dashboard analitik interaktif dengan real-time data visualization menggunakan D3.js 
+                                dan Chart.js, custom KPI metrics, predictive analytics dengan ML models, dan 
+                                exportable reports. Support multi-tenant architecture dan role-based access control.
+                            </p>
+                            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                                <span style="background: rgba(255,255,255,0.1); padding: 0.4rem 1rem; border-radius: 20px; font-size: 0.85rem;">React</span>
+                                <span style="background: rgba(255,255,255,0.1); padding: 0.4rem 1rem; border-radius: 20px; font-size: 0.85rem;">D3.js</span>
+                                <span style="background: rgba(255,255,255,0.1); padding: 0.4rem 1rem; border-radius: 20px; font-size: 0.85rem;">TensorFlow</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Blog Platform -->
+                <div class="portfolio-item">
+                    <div class="portfolio-card">
+                        <div class="portfolio-image" style="height: 220px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-blog" style="font-size: 4rem; color: white;"></i>
+                        </div>
+                        <div style="padding: 2rem;">
+                            <h3 style="margin-bottom: 1rem; color: #fff; font-size: 1.5rem;">Advanced Blog Platform</h3>
+                            <p style="color: var(--text-secondary); margin-bottom: 1.5rem; line-height: 1.7;">
+                                Platform blogging modern dengan markdown editor (Monaco Editor), SEO optimization 
+                                otomatis, headless CMS (Strapi), PWA support, image optimization, newsletter 
+                                system, dan social media auto-posting. Performance score 98/100 di Lighthouse.
+                            </p>
+                            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                                <span style="background: rgba(255,255,255,0.1); padding: 0.4rem 1rem; border-radius: 20px; font-size: 0.85rem;">Next.js 13</span>
+                                <span style="background: rgba(255,255,255,0.1); padding: 0.4rem 1rem; border-radius: 20px; font-size: 0.85rem;">Strapi</span>
+                                <span style="background: rgba(255,255,255,0.1); padding: 0.4rem 1rem; border-radius: 20px; font-size: 0.85rem;">PWA</span>
+                                <span style="background: rgba(255,255,255,0.1); padding: 0.4rem 1rem; border-radius: 20px; font-size: 0.85rem;">SEO</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact" style="padding: 120px 0;">
+        <div class="container">
+            <h2 class="section-title">Get In Touch</h2>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5rem;">
+                <div>
+                    <div class="glass-card" style="padding: 2.5rem;">
+                        <h3 style="font-size: 1.8rem; margin-bottom: 2rem; color: #fff;">Contact Info</h3>
+                        <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <i class="fas fa-envelope" style="font-size: 1.5rem; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"></i>
+                                <div>
+                                    <h4 style="color: #fff; margin-bottom: 0.3rem;">Email</h4>
+                                    <p style="color: var(--text-secondary);">alief@example.com</p>
+                                </div>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <i class="fas fa-map-marker-alt" style="font-size: 1.5rem; background: var(--secondary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"></i>
+                                <div>
+                                    <h4 style="color: #fff; margin-bottom: 0.3rem;">Location</h4>
+                                    <p style="color: var(--text-secondary);">Banda Aceh, Aceh, Indonesia</p>
+                                </div>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <i class="fab fa-whatsapp" style="font-size: 1.5rem; background: linear-gradient(135deg, #25D366 0%, #128C7E 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"></i>
+                                <div>
+                                    <h4 style="color: #fff; margin-bottom: 0.3rem;">WhatsApp</h4>
+                                    <p style="color: var(--text-secondary);">+62 823-4567-8901</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="glass-card" style="padding: 2.5rem;">
+                    <h3 style="font-size: 1.8rem; margin-bottom: 2rem; color: #fff;">Send Message</h3>
+                    <form id="contactForm">
+                        <input type="text" placeholder="Your Name" required style="width: 100%; padding: 1rem; margin-bottom: 1rem; background: rgba(255,255,255,0.1); border: 1px solid var(--glass-border); border-radius: 12px; color: #fff;">
+                        <input type="email" placeholder="Your Email" required style="width: 100%; padding: 1rem; margin-bottom: 1rem; background: rgba(255,255,255,0.1); border: 1px solid var(--glass-border); border-radius: 12px; color: #fff;">
+                        <textarea placeholder="Your Message" rows="5" required style="width: 100%; padding: 1rem; margin-bottom: 1.5rem; background: rgba(255,255,255,0.1); border: 1px solid var(--glass-border); border-radius: 12px; color: #fff; resize: vertical;"></textarea>
+                        <button type="submit" class="btn btn-primary glass-card" style="width: 100%;">Launch Message <i class="fas fa-paper-plane"></i></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer style="background: rgba(0,0,0,0.8); padding: 3rem 0; text-align: center; border-top: 1px solid var(--glass-border);">
+        <div class="container">
+            <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">© 2024 Alief Developer. All rights reserved. | Made with ❤️ from Aceh</p>
+            <div style="display: flex; justify-content: center; gap: 2rem;">
+                <a href="#" style="color: #fff; font-size: 1.5rem; transition: all 0.3s ease;"><i class="fab fa-github"></i></a>
+                <a href="#" style="color: #fff; font-size: 1.5rem; transition: all 0.3s ease;"><i class="fab fa-linkedin"></i></a>
+                <a href="#" style="color: #fff; font-size: 1.5rem; transition: all 0.3s ease;"><i class="fab fa-twitter"></i></a>
+                <a href="#" style="color: #fff; font-size: 1.5rem; transition: all 0.3s ease;"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // All 40+ Effects Implementation
+        
+        // 1. Loading Screen
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loadingScreen').style.opacity = '0';
+                setTimeout(() => document.getElementById('loadingScreen').style.display = 'none', 1000);
+            }, 2000);
+        });
+
+        // 2. Custom Cursor (11. Mouse Cursor Glow + 31. Floating Particle Cursor)
+        const cursor = document.getElementById('cursor');
+        const cursorFollower = document.getElementById('cursorFollower');
+        let mouseX = 0, mouseY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            cursor.style.left = mouseX + 'px';
+            cursor.style.top = mouseY + 'px';
+            cursorFollower.style.left = mouseX + 'px';
+            cursorFollower.style.top = mouseY + 'px';
+        });
+
+        // 3. Theme Toggle (10. Dark Mode Toggle)
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = body.getAttribute('data-theme');
+            body.setAttribute('data-theme', currentTheme === 'dark' ? 'light' : 'dark');
+            themeToggle.querySelector('i').className = currentTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        });
+
+        // 4. Smooth Scroll (1. Smooth Scroll)
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            });
+        });
+
+        // 5. Typing Animation (7. Typing Text Animation)
+        function typeWriter(element, text, speed = 100) {
+            let i = 0;
+            element.innerHTML = '';
+            function type() {
+                if (i < text.length) {
+                    element.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                } else {
+                    element.classList.remove('typing-text');
+                }
+            }
+            type();
+        }
+
+        window.addEventListener('load', () => {
+            const heroName = document.getElementById('heroName');
+            typeWriter(heroName, 'Alief Developer', 120);
+        });
+
+        // 6. Matrix Rain Effect (25. Matrix Rain Effect)
+        const matrixCanvas = document.getElementById('matrixCanvas');
+        const ctx = matrixCanvas.getContext('2d');
+        matrixCanvas.width = window.innerWidth;
+        matrixCanvas.height = window.innerHeight;
+
+        const matrix = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789@#$%^&*()*&^%+-/~{[|`]}";
+        const matrixArray = matrix.split("");
+        const fontSize = 10;
+        const columns = matrixCanvas.width / fontSize;
+        const drops = Array(Math.floor(columns)).fill(1);
+
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.04)';
+            ctx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
+            ctx.fillStyle = '#00f5ff';
+            ctx.font = fontSize + 'px monospace';
+            
+            drops.forEach((y, i) => {
+                const text = matrixArray[Math.floor(Math.random() * matrixArray.length)];
+                ctx.fillText(text, i * fontSize, y * fontSize);
+                if (y * fontSize > matrixCanvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            });
+        }
+        setInterval(drawMatrix, 35);
+
+        // 7. Particle Network (6. Particle Network Background)
+        const particlesCanvas = document.getElementById('particles');
+        const pCtx = particlesCanvas.getContext('2d');
+        particlesCanvas.width = window.innerWidth;
+        particlesCanvas.height = window.innerHeight;
+
+        let particles = [];
+        class Particle {
+            constructor() {
+                this.x = Math.random() * particlesCanvas.width;
+                this.y = Math.random() * particlesCanvas.height;
+                this.size = Math.random() * 2 + 1;
+                this.speedX = Math.random() * 1 - 0.5;
+                this.speedY = Math.random() * 1 - 0.5;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.x > particlesCanvas.width || this.x < 0) this.speedX *= -1;
+                if (this.y > particlesCanvas.height || this.y < 0) this.speedY *= -1;
+            }
+            draw() {
+                pCtx.fillStyle = 'rgba(0, 255, 255, 0.5)';
+                pCtx.beginPath();
+                pCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                pCtx.fill();
+            }
+        }
+
+        function initParticles() {
+            particles = [];
+            for (let i = 0; i < 100; i++) {
+                particles.push(new Particle());
+            }
+        }
+        initParticles();
+
+        function animateParticles() {
+            pCtx.clearRect(0, 0, particlesCanvas.width, particlesCanvas.height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            connectParticles();
+            requestAnimationFrame(animateParticles);
+        }
+
+        function connectParticles() {
+            for (let a = 0; a < particles.length; a++) {
+                for (let b = a; b < particles.length; b++) {
+                    let dx = particles[a].x - particles[b].x;
+                    let dy = particles[a].y - particles[b].y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < 100) {
+                        pCtx.strokeStyle = `rgba(0, 255, 255, ${1 - distance/100})`;
+                        pCtx.lineWidth = 1;
+                        pCtx.beginPath();
+                        pCtx.moveTo(particles[a].x, particles[a].y);
+                        pCtx.lineTo(particles[b].x, particles[b].y);
+                        pCtx.stroke();
+                    }
+                }
+            }
+        }
+        animateParticles();
+
+        // 8. Floating Elements (9. Floating Objects Animation)
+        function createFloatingElements() {
+            const container = document.getElementById('floatingElements');
+            for (let i = 0; i < 15; i++) {
+                const item = document.createElement('div');
+                item.className = 'floating-item';
+                item.style.left = Math.random() * 100 + '%';
+                item.style.width = Math.random() * 60 + 20 + 'px';
+                item.style.height = item.style.width;
+                item.style.animationDelay = Math.random() * 20 + 's';
+                item.style.animationDuration = (Math.random() * 20 + 20) + 's';
+                container.appendChild(item);
+            }
+        }
+        createFloatingElements();
+
+        // 9. Form Handler
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const btn = this.querySelector('button');
+            const original = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+            btn.disabled = true;
+            
+            setTimeout(() => {
+                alert('🚀 Pesan berhasil terkirim! Saya akan menghubungi Anda dalam 24 jam dari Aceh.');
+                this.reset();
+                btn.innerHTML = original;
+                btn.disabled = false;
+            }, 2500);
+        });
+
+        // 10. Window Resize Handler
+        window.addEventListener('resize', () => {
+            matrixCanvas.width = window.innerWidth;
+            matrixCanvas.height = window.innerHeight;
+            particlesCanvas.width = window.innerWidth;
+            particlesCanvas.height = window.innerHeight;
+            initParticles();
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 100) {
+                navbar.style.background = 'rgba(10, 10, 20, 0.95)';
+                navbar.style.backdropFilter = 'blur(40px)';
+                navbar.style.boxShadow = '0 10px 30px rgba(0,0,0,0.3)';
+            } else {
+                navbar.style.background = 'rgba(255,255,255,0.05)';
+                navbar.style.backdropFilter = 'blur(30px)';
+                navbar.style.boxShadow = 'none';
+            }
+        });
+    </script>
+
+    <!-- ================= LEARNING FEATURES SECTION ================= -->
+
+<!-- Search Materi -->
+<section style="padding:100px 20px;">
+  <div class="container">
+    <h2 class="section-title">Search Materi</h2>
+    <div class="glass-card">
+      <input type="text" placeholder="Cari materi belajar..."
+      style="width:100%;padding:18px;border:none;border-radius:15px;background:rgba(255,255,255,0.1);color:white;">
+    </div>
+  </div>
+</section>
+
+<!-- Materi Pembelajaran -->
+<section style="padding:100px 20px;">
+  <div class="container">
+    <h2 class="section-title">Materi Pembelajaran</h2>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:2rem;">
+
+      <div class="glass-card">
+        <h3>HTML Dasar</h3>
+        <p>Belajar struktur dasar HTML modern lengkap dari beginner sampai mahir.</p>
+        <button class="theme-toggle">Mulai Belajar</button>
+      </div>
+
+      <div class="glass-card">
+        <h3>CSS Modern</h3>
+        <p>Belajar Flexbox, Grid, Animation, Glassmorphism, dan Responsive Design.</p>
+        <button class="theme-toggle">Mulai Belajar</button>
+      </div>
+
+      <div class="glass-card">
+        <h3>JavaScript</h3>
+        <p>Pelajari DOM, API, Animation, dan fitur interaktif modern.</p>
+        <button class="theme-toggle">Mulai Belajar</button>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Video Pembelajaran -->
+<section style="padding:100px 20px;">
+  <div class="container">
+    <h2 class="section-title">Video Pembelajaran</h2>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(350px,1fr));gap:2rem;">
+
+      <div class="glass-card">
+        <iframe width="100%" height="220"
+        src="https://www.youtube.com/embed/UB1O30fR-EE"
+        frameborder="0" allowfullscreen
+        style="border-radius:15px;"></iframe>
+      </div>
+
+      <div class="glass-card">
+        <iframe width="100%" height="220"
+        src="https://www.youtube.com/embed/yfoY53QXEnI"
+        frameborder="0" allowfullscreen
+        style="border-radius:15px;"></iframe>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Progress Belajar -->
+<section style="padding:100px 20px;">
+  <div class="container">
+    <h2 class="section-title">Progress Belajar</h2>
+
+    <div class="glass-card">
+      <p>HTML</p>
+      <div style="background:#222;border-radius:20px;height:20px;">
+        <div style="width:90%;height:100%;background:cyan;border-radius:20px;"></div>
+      </div>
+
+      <br>
+
+      <p>CSS</p>
+      <div style="background:#222;border-radius:20px;height:20px;">
+        <div style="width:75%;height:100%;background:magenta;border-radius:20px;"></div>
+      </div>
+
+      <br>
+
+      <p>JavaScript</p>
+      <div style="background:#222;border-radius:20px;height:20%;height:20px;">
+        <div style="width:60%;height:100%;background:lime;border-radius:20px;"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Statistik -->
+<section style="padding:100px 20px;">
+  <div class="container">
+    <h2 class="section-title">Statistik Pengguna</h2>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:2rem;">
+
+      <div class="glass-card">
+        <h1>10K+</h1>
+        <p>Students</p>
+      </div>
+
+      <div class="glass-card">
+        <h1>500+</h1>
+        <p>Video Materi</p>
+      </div>
+
+      <div class="glass-card">
+        <h1>120+</h1>
+        <p>Quiz</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Quiz -->
+<section style="padding:100px 20px;">
+  <div class="container">
+    <h2 class="section-title">Quiz Interaktif</h2>
+
+    <div class="glass-card">
+      <h3>Apa fungsi HTML?</h3>
+
+      <button class="theme-toggle">Membuat Struktur Web</button>
+      <button class="theme-toggle">Mengedit Foto</button>
+      <button class="theme-toggle">Hack Wifi</button>
+    </div>
+  </div>
+</section>
+
+<!-- Testimoni -->
+<section style="padding:100px 20px;">
+  <div class="container">
+    <h2 class="section-title">Testimoni User</h2>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:2rem;">
+
+      <div class="glass-card">
+        <p>"Belajar coding jadi lebih mudah dan modern!"</p>
+        <h4>- Andi</h4>
+      </div>
+
+      <div class="glass-card">
+        <p>"UI cyberpunk nya keren banget."</p>
+        <h4>- Rizky</h4>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section style="padding:100px 20px;">
+  <div class="container">
+    <h2 class="section-title">FAQ</h2>
+
+    <div class="glass-card">
+      <h3>Apakah gratis?</h3>
+      <p>Ya, semua materi dasar dapat diakses gratis.</p>
+
+      <br>
+
+      <h3>Apakah bisa di HP?</h3>
+      <p>Bisa, web responsive untuk mobile dan desktop.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Leaderboard -->
+<section style="padding:100px 20px;">
+  <div class="container">
+    <h2 class="section-title">Leaderboard</h2>
+
+    <div class="glass-card">
+      <p>🥇 Alief - 5000 XP</p>
+      <p>🥈 Rizky - 4300 XP</p>
+      <p>🥉 Andi - 3900 XP</p>
+    </div>
+  </div>
+</section>
+
+<!-- Daily Challenge -->
+<section style="padding:100px 20px;">
+  <div class="container">
+    <h2 class="section-title">Daily Challenge</h2>
+
+    <div class="glass-card">
+      <h3>Challenge Hari Ini</h3>
+      <p>Buat landing page modern menggunakan HTML & CSS.</p>
+      <button class="theme-toggle">Mulai Challenge</button>
+    </div>
+  </div>
+</section>
+
+<!-- Forum -->
+<section style="padding:100px 20px;">
+  <div class="container">
+    <h2 class="section-title">Forum Diskusi</h2>
+
+    <div class="glass-card">
+      <p>💬 Bagaimana cara membuat animasi hover?</p>
+      <p>💬 Cara membuat web responsive?</p>
+      <p>💬 Apa itu JavaScript DOM?</p>
+    </div>
+  </div>
+</section>
+
+<!-- Kalender -->
+<section style="padding:100px 20px;">
+  <div class="container">
+    <h2 class="section-title">Kalender Akademik</h2>
+
+    <div class="glass-card">
+      <p>📅 Senin - HTML Dasar</p>
+      <p>📅 Selasa - CSS Animation</p>
+      <p>📅 Rabu - JavaScript DOM</p>
+    </div>
+  </div>
+</section>
+
+<!-- AI Assistant -->
+<section style="padding:100px 20px;">
+  <div class="container">
+    <h2 class="section-title">AI Assistant Mini</h2>
+
+    <div class="glass-card">
+      <input type="text"
+      placeholder="Tanya AI..."
+      style="width:100%;padding:15px;border:none;border-radius:15px;background:rgba(255,255,255,0.1);color:white;">
+    </div>
+  </div>
+</section>
+
+<!-- Sertifikat -->
+<section style="padding:100px 20px;">
+  <div class="container">
+    <h2 class="section-title">Sertifikat Digital</h2>
+
+    <div class="glass-card">
+      <p>Selesaikan semua materi untuk mendapatkan sertifikat digital.</p>
+      <button class="theme-toggle">Download Sertifikat</button>
+    </div>
+  </div>
+</section>
+</body>
+</html>
